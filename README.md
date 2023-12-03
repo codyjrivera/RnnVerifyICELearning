@@ -1,3 +1,13 @@
+## Extensions by Cody Rivera and Hrishikesh Balakrisnan, 2023
+
+We intend to implement ICE learning for invariant synthesis to prove
+these networks correct. We build on top of RnnVerify. I add Gurobi
+to `requirements.txt`, and the package/versioning situation has very likely evolved
+massively since 2020. 
+
+You also need to do `pip install --upgrade pip` (and for sake of reproducibility, I also
+do `pip install wheel`).
+
 *** RnnVerify - June 2020 ***
 
 This repository contains the proof-of-concept implementation of the

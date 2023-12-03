@@ -39,3 +39,6 @@ _deps
 *.tar.gz
 *.pkl
 tools/pybind11-2.3.0
+
+build/
+.venv/

@@ -3,7 +3,7 @@
 #
 
 # Change this line if you want a different compiler
-CXXC = c++ -Wall -W -Werror -I. -I..
+CXXC = c++ -Wall -W -I. -I..
 
 # If you want to use python, specify USE_PYTHON=1 on the command line
 ifdef USE_PYTHON

@@ -63,7 +63,6 @@ def test_multilayer_large_n():
     assert res
     return
 
-
 def test_specific_multilayer():
     point = points[3]
     net_path = multi_layer_paths[0]
@@ -79,7 +78,6 @@ def test_specific_multilayer():
     res, _, _ = adversarial_query(point, 0.01, idx_max, other_idx, net_path, gurobi_ptr, n)
     assert res
 
-
 @pytest.mark.parametrize(['point', 'n', 'net_path'], product(*[points, [2, 4, 6], multi_layer_paths]))
 def test_using_multilayer_gurobi(point, n, net_path):
     print(net_path)
@@ -91,4 +89,5 @@ def test_using_multilayer_gurobi(point, n, net_path):
     idx_max, other_idx = get_out_idx(point, n, net_path, method)
     res, queries_stats, alpha_history = adversarial_query(point, 0.01, idx_max, other_idx, net_path,
                                                           gurobi_ptr, n)
+    assert res
 
