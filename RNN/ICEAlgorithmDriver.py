@@ -7,6 +7,7 @@ import tensorflow as tf
 from RNN.MarabouRnnModel import MARABOU_TIMEOUT
 from RNN.MarabouRnnModel import RnnMarabouModel
 from RNN.ICELearner import ICELearner
+from RNN.ICESMTLearner import ICESMTLearner
 from maraboupy import MarabouCore
 
 large = 5000.0
@@ -448,7 +449,7 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
 
         start_step = timer()
 
-        learner = ICELearner()
+        learner = ICESMTLearner()
         learner_res = learner.do_round(rnnModel, algorithm)
         if not learner_res:
             res = False
@@ -481,7 +482,7 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
         # algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
 
         end_step = timer()
-        print("Time taken in Sygus", end_step - start_step)
+        #print("Time taken in Sygus", end_step - start_step)
         stats['step_times'].append(end_step - start_step)
 
         ice_test = True
