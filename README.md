@@ -95,3 +95,5 @@ demonstare the method on more (random) networks.
 To run all tests use:
     PYTHONPATH=. pytest RNN/*
 
+
+4:53.74 Jacoby

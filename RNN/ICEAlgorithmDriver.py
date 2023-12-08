@@ -6,6 +6,7 @@ import tensorflow as tf
 
 from RNN.MarabouRnnModel import MARABOU_TIMEOUT
 from RNN.MarabouRnnModel import RnnMarabouModel
+from RNN.ICELearner import ICELearner
 from maraboupy import MarabouCore
 
 large = 5000.0
@@ -205,6 +206,10 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
     hypothesis_eq = []
     assignments = []
 
+    rnn_node_ids = list(range(len(rnn_start_idxs))) * 2
+    pos_cex = []
+    imp_cex = []
+
     for i in range(len(invariant_equations)):
         cur_base_eq, cur_step_eq, cur_hypothesis_eq = create_invariant_equations(rnn_start_idxs, invariant_equations[i])
         base_eq.append(cur_base_eq)
@@ -217,7 +222,6 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
             network.addEquation(eq)
         marabou_result, sat_vars = marabou_solve_negate_eq(network, print_vars=True, return_vars=True)
         assignments.append(sat_vars)
-        # print('induction base query')
         # network.dump()
 
         for eq in ls_eq:
@@ -226,13 +230,23 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
         proved_invariants[i] = marabou_result
         if not marabou_result:
             print("induction base fail, on invariant {}".format(i))
+            # I'm just going with rnn_start_idx[i] + 3 blindly here, as the
+            # value of the memory node.
+            # print("here!!!", rnn_start_idxs[rnn_node_ids[i]])
+            # print(sat_vars[rnn_start_idxs[rnn_node_ids[i]]])
+            pos_cex.append(
+                (rnn_node_ids[i],
+                 sat_vars[rnn_start_idxs[rnn_node_ids[i]]], # should be zero
+                 sat_vars[rnn_start_idxs[rnn_node_ids[i]] + 3])
+            )
+            # Formulate positive counterexample.
             # for eq in ls_eq:
             #     eq.dump()
             # assert False
 
     if not all(proved_invariants):
         if return_vars:
-            return proved_invariants, assignments
+            return proved_invariants, assignments, pos_cex, imp_cex
         else:
             return proved_invariants
 
@@ -269,6 +283,15 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
             # proved_invariants[i] = marabou_result
             if not marabou_result:
                 proved_invariants[i] = False
+                # rnn_start_idx[i] + 1: lhs implication
+                # rnn_start_idx[i] + 3: rhs implication
+                imp_cex.append(
+                    (rnn_node_ids[i],
+                     cur_vars[rnn_start_idxs[rnn_node_ids[i]]],
+                    (cur_vars[rnn_start_idxs[rnn_node_ids[i]] + 1],
+                     cur_vars[rnn_start_idxs[rnn_node_ids[i]] + 3]))
+                )
+                #print(imp_cex)
             else:
                 proved_invariants[i] = True
 
@@ -278,7 +301,7 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
         network.removeEquation(eq)
 
     if return_vars:
-        return proved_invariants, assignments
+        return proved_invariants, assignments, pos_cex, imp_cex
     else:
         return proved_invariants
 
@@ -359,7 +382,8 @@ def invariant_oracle_generator(network, rnn_start_idxs, rnn_output_idxs, return_
 
 
 def property_oracle_generator(network, property_equations):
-    def property_oracle(invariant_equations):
+    def property_oracle(invariant_equations, last_rnn_indices,
+                        return_vars=False):
 
         for eq in invariant_equations:
             if eq is not None:
@@ -368,19 +392,33 @@ def property_oracle_generator(network, property_equations):
         # TODO: This is only for debug
         # before we prove the property, make sure the invariants does not contradict each other, expect SAT from marabou
         # network.dump()
-        # assert not marabou_solve_negate_eq(network, False, False)
+        assert not marabou_solve_negate_eq(network, False, False)
 
         for eq in property_equations:
             if eq is not None:
                 network.addEquation(eq)
-        res = marabou_solve_negate_eq(network, False, print_vars=True)
+        res, sat_vars = marabou_solve_negate_eq(network, False, print_vars=True, return_vars=True)
         # network.dump()
         if res:
             pass
+        # Get negative counterexamples
+        neg_cex = []
+        if not res:
+            for i, rnn_idx in enumerate(last_rnn_indices):
+                neg_cex.append(
+                    (i,
+                    sat_vars[rnn_idx],
+                    sat_vars[rnn_idx + 3]) # Again, this weird +3 thing.
+                )
+        
         for eq in invariant_equations + property_equations:
             if eq is not None:
                 network.removeEquation(eq)
-        return res
+
+        if return_vars:
+            return res, sat_vars, neg_cex
+        else:
+            return res
 
     return property_oracle
 
@@ -408,19 +446,50 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
 
         # Obtain an invariant from CVC5 via SyGuS
 
-        # TEMP: Just for an example
-        algorithm.alphas_algorithm_per_layer[0].ice_alphas = [0.0, 0.0, 0.0, 0.18445917338170847]
-        algorithm.alphas_algorithm_per_layer[0].ice_betas = [-0.0002, -0.0002, 0.019999999999868123, 0.19543422519421938]
-        algorithm.alphas_algorithm_per_layer[0].ice_is_upper = [False, False, True, True]
-        algorithm.alphas_algorithm_per_layer[1].ice_alphas = [0.277017253090813, 0.19006014976501465, 0.5331825524177967, 0.19187598175435117]
-        algorithm.alphas_algorithm_per_layer[1].ice_betas = [0.8006336043514816, -0.570380449295044, 0.8597897887226245, 0.19287598175435117]
-        algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
-        
+        start_step = timer()
+
+        learner = ICELearner()
+        learner_res = learner.do_round(rnnModel, algorithm)
+        if not learner_res:
+            res = False
+            break
+
+        # # Test case
+        # algorithm.alphas_algorithm_per_layer[0].ice_alphas = [0.0, 0.0, 0.0, 0.0]
+        # algorithm.alphas_algorithm_per_layer[0].ice_betas = [0.0, 0.0, 0.0, 1.0]
+        # algorithm.alphas_algorithm_per_layer[0].ice_is_upper = [False, False, True, True]
+        # algorithm.alphas_algorithm_per_layer[1].ice_alphas = [0.0, 0.0, 1.0, 0.0]
+        # algorithm.alphas_algorithm_per_layer[1].ice_betas = [0.0, 0.0, 1.0, 1.0]
+        # algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
+
+        # # Another invariant? (yes)
+        # algorithm.alphas_algorithm_per_layer[0].ice_alphas = [0.0, 0.0, 0.0, 1.0]
+        # algorithm.alphas_algorithm_per_layer[0].ice_betas = [0.0, 0.0, 0.0, 1.0]
+        # algorithm.alphas_algorithm_per_layer[0].ice_is_upper = [False, False, True, True]
+        # algorithm.alphas_algorithm_per_layer[1].ice_alphas = [0.0, 0.0, 1.0, 1.1]
+        # algorithm.alphas_algorithm_per_layer[1].ice_betas = [0.0, 0.0, 1.0, 0.0]
+        # algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
+
+        # if i > 0:
+        #     exit(1)
+        # # Correct case
+        # algorithm.alphas_algorithm_per_layer[0].ice_alphas = [0.0, 0.0, 0.0, 0.18445917338170847]
+        # algorithm.alphas_algorithm_per_layer[0].ice_betas = [-0.0002, -0.0002, 0.019999999999868123, 0.19543422519421938]
+        # algorithm.alphas_algorithm_per_layer[0].ice_is_upper = [False, False, True, True]
+        # algorithm.alphas_algorithm_per_layer[1].ice_alphas = [0.277017253090813, 0.19006014976501465, 0.5331825524177967, 0.19187598175435117]
+        # algorithm.alphas_algorithm_per_layer[1].ice_betas = [0.8006336043514816, -0.570380449295044, 0.8597897887226245, 0.19287598175435117]
+        # algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
+
+        end_step = timer()
+        print("Time taken in Sygus", end_step - start_step)
+        stats['step_times'].append(end_step - start_step)
+
         ice_test = True
 
+        invariant_okay = True
         for l in range(rnnModel.num_rnn_layers):
-            print("layer: ", l)
-            start_step = timer()
+            #print("layer: ", l)
+            # start_step = timer()
             if hasattr(algorithm, 'support_multi_layer') and algorithm.support_multi_layer:
                 rnn_start_idxs, rnn_output_idxs = rnnModel.get_start_end_idxs(rnn_layer=l)
                 if ice_test:
@@ -432,15 +501,19 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
             else:
                 rnn_start_idxs, rnn_output_idxs = rnnModel.get_start_end_idxs(rnn_layer=None)
                 equations = algorithm.get_equations()
-            print(equations)
-            end_step = timer()
-            stats['step_times'].append(end_step - start_step)
-            if equations is None:
+            # end_step = timer()
+            # stats['step_times'].append(end_step - start_step)
+            if equations is None: # This is the case where no invariants in the concept
+                                  # class are found.
                 unsat = True
                 break
             start_invariant = timer()
             invariant_oracle = invariant_oracle_generator(network, rnn_start_idxs, rnn_output_idxs, return_vars=True)
-            layer_invariant_results, sat_vars = invariant_oracle(equations)
+            layer_invariant_results, sat_vars, pos_cex, imp_cex = invariant_oracle(equations)
+            algorithm.alphas_algorithm_per_layer[l]\
+                     .pos_cex.extend(pos_cex)
+            algorithm.alphas_algorithm_per_layer[l]\
+                     .imp_cex.extend(imp_cex)
             end_invariant = timer()
             stats['invariant_times'].append(end_invariant - start_invariant)
             invariant_results += layer_invariant_results
@@ -459,19 +532,23 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
                 for eq in proved_equations:
                     network.addEquation(eq)
             else:
-                start_step = timer()
                 print('layer: {}, fail in one (or more) invariants: {}'.format(l, invariant_results))
-                # Failed to prove, get better invariant
-                res = algorithm.do_step(strengthen=False, invariants_results=invariant_results, sat_vars=sat_vars,
-                                        layer_idx=l)
-                end_step = timer()
-                stats['step_times'].append(end_step - start_step)
-                if res:
-                    proved_equations = []
-                    for eq in proved_equations:
-                        network.removeEquation(eq)
-                    return prove_multidim_property(rnnModel, property_equations, algorithm, return_alphas,
-                                                   number_of_steps, debug, return_queries_stats, stats)
+                invariant_okay = False
+                break
+                # # Still propagate the invariant forward.
+                # if ice_test:
+                #     if hasattr(algorithm, 'proved_ice_invariant'):
+                #         algorithm.proved_ice_invariant(l, equations=equations)
+                # else:
+                #     if hasattr(algorithm, 'proved_invariant'):
+                #         algorithm.proved_invariant(l, equations=equations)
+                # # When we prove layer l+1 we need to proved equations on layer l
+                # eqs = [eq for eq_ls in equations for eq in eq_ls] if isinstance(equations[0],
+                #                                                                               list) else equations
+                # eqs = map(lambda x: x[1], filter(lambda t: layer_invariant_results[t[0]], enumerate(eqs)))
+                # proved_equations += eqs
+                # for eq in proved_equations:
+                #     network.addEquation(eq)
 
         if unsat:
             res = False
@@ -479,45 +556,41 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
         for eq in proved_equations:
             network.removeEquation(eq)
         # print(invariant_results)
-        if all(invariant_results):
+        if all(invariant_results) and invariant_okay:
             # print('proved an invariant: {}'.format(algorithm.get_alphas()))
             start_property = timer()
-            prop_res = property_oracle(proved_equations)
+            last_rnn_idxs, _ = rnnModel.get_start_end_idxs(rnn_layer=rnnModel.num_rnn_layers - 1)
+            prop_res, sat_vars, neg_cex = property_oracle(
+                proved_equations, 
+                last_rnn_idxs,
+                return_vars=True
+            )
+            algorithm.alphas_algorithm_per_layer[l]\
+                     .neg_cex.extend(neg_cex)
             end_property = timer()
             stats['property_times'].append(end_property - start_property)
             if prop_res:
-                print("proved property after {} iterations, using alphas: {}".format(i, algorithm.get_alphas()))
+                print("proved property after {} iterations, using the following invariants:".format(i + 1))
+                # Test case
+                num_pos, num_neg, num_imp = 0, 0, 0
+                for l in range(rnnModel.num_rnn_layers):
+                    print(algorithm.alphas_algorithm_per_layer[l].ice_alphas)
+                    print(algorithm.alphas_algorithm_per_layer[l].ice_betas)
+                    print(algorithm.alphas_algorithm_per_layer[l].ice_is_upper)
+                    num_pos += len(algorithm.alphas_algorithm_per_layer[l].pos_cex)
+                    num_imp += len(algorithm.alphas_algorithm_per_layer[l].imp_cex)
+                    num_neg += len(algorithm.alphas_algorithm_per_layer[l].neg_cex)
+                num_total = num_pos + num_neg + num_imp
+                print("and {} counterexamples: ({} +) ({} -) ({} * => *)".format(num_total, num_pos, num_neg, num_imp))
                 res = True
                 break
             else:
-                start_step = timer()
-                # If the property failed no need to pass which invariants passed (of course)
-                if hasattr(algorithm, 'return_vars') and algorithm.return_vars:
-                    algorithm.do_step(True, None, sat_vars, layer_idx=i)
-                else:
-                    algorithm.do_step(True, None)
-                end_step = timer()
-                stats['step_times'].append(end_step - start_step)
+                print("failed to prove property at iteration", i + 1)
+                res = False
         else:
             # assert False
-            start_step = timer()
             print('fail in one (or more) invariants:', invariant_results)
-
-            if hasattr(algorithm, 'return_vars') and algorithm.return_vars:
-                # Invariant failed in gurobi based search, does not suppose to happen
-                # assert False, invariant_results
-                # Restart the search (start from first layer)
-                res = algorithm.do_step(strengthen=False, invariants_results=invariant_results, sat_vars=sat_vars)
-                if res:
-                    return prove_multidim_property(rnnModel, property_equations, algorithm, return_alphas,
-                                                   number_of_steps,
-                                                   debug, return_queries_stats, stats)
-                #  FAIL to prove
-                break
-            else:
-                algorithm.do_step(False, invariant_results)
-            end_step = timer()
-            stats['step_times'].append(end_step - start_step)
+            res = False
 
         #  print progress for debug
         if debug:

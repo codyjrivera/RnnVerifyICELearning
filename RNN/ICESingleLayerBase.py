@@ -89,6 +89,10 @@ class ICESingleLayer:
         self.ice_equations = [None] * self.dim * 2
         self.ice_is_upper = [None] * self.dim * 2
 
+        self.pos_cex = []
+        self.imp_cex = []
+        self.neg_cex = []
+
 
     @staticmethod
     def initialize_stats(stats: Dict) -> Dict:
