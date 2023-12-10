@@ -78,6 +78,62 @@ class ICELearner:
         g.addRules(cn_nt, [solver.mkReal(0), cn_prod0, cn_prod1, cn_prod2])
 
         return g
+        
+    # # ; (synth-fun Inv ((t Real) (m Real)) Bool
+    # # ;     ((B Bool) (L Bool) (U Bool) (C Real) (Cp Real) (Cn Real))
+    # # ;     ((B Bool ((and L U)))
+    # # ;      (L Bool ((>= m (+ (* C t) C))))
+    # # ;      (U Bool ((<= m (+ (* C t) C))))
+    # # ;      (C Real ((- 5000) 5000 (* 0.5 (+ C C))))))
+    # def makeGrammar(self, t, m):
+    #     solver = self.solver
+    #     real = solver.getRealSort()
+    #     boolean = solver.getBooleanSort()
+
+    #     # Declare non-terminals
+    #     b_nt = solver.mkVar(boolean, "B")
+    #     l_nt = solver.mkVar(boolean, "L")
+    #     u_nt = solver.mkVar(boolean, "U")
+    #     c_nt = solver.mkVar(real, "C")
+
+    #     # Make grammar
+    #     g = solver.mkGrammar([t, m], [b_nt, l_nt, u_nt, c_nt])
+
+    #     # Productions for B
+    #     b_prod0 = solver.mkTerm(Kind.AND, l_nt, u_nt)
+    #     g.addRules(b_nt, [b_prod0])
+
+    #     # Productions for L
+    #     l_prod0 = solver.mkTerm(
+    #         Kind.GEQ,
+    #         m,
+    #         solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c_nt, t), c_nt),
+    #     )
+    #     g.addRules(l_nt, [l_prod0])
+
+    #     # Productions for U
+    #     u_prod0 = solver.mkTerm(
+    #         Kind.LEQ,
+    #         m,
+    #         solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c_nt, t), c_nt),
+    #     )
+    #     g.addRules(u_nt, [u_prod0])
+
+    #     # Productions for C
+    #     lb = solver.mkReal(-5000)
+    #     ub = solver.mkReal(5000)
+    #     midpoint = solver.mkTerm(
+    #         Kind.MULT,
+    #         solver.mkReal(0.5),
+    #         solver.mkTerm(
+    #             Kind.ADD,
+    #             c_nt,
+    #             c_nt
+    #         )
+    #     )
+    #     g.addRules(c_nt, [lb, ub, midpoint])
+
+    #     return g
 
     def do_round(self, rnnModel: RnnMarabouModel, algorithm: ICEMultiLayer, bk=False):
         solver = self.solver
@@ -134,16 +190,24 @@ class ICELearner:
 
             # Add negative counterexamples
             #print("neg cex", algorithm.alphas_algorithm_per_layer[l].neg_cex)
-            for i, t, n in algorithm.alphas_algorithm_per_layer[l].neg_cex:
-                solver.addSygusConstraint(
-                    solver.mkTerm(
-                        Kind.NOT,
+            for cex in algorithm.alphas_algorithm_per_layer[l].neg_cex:
+                conjuncts = []
+                for i, t, n in cex:
+                    conjuncts.append(
                         solver.mkTerm(
                             Kind.APPLY_UF,
                             invariants_inner[i],
                             solver.mkReal(t),
                             solver.mkReal(Fraction(str(n))),
-                        ),
+                        )
+                    )
+                solver.addSygusConstraint(
+                    solver.mkTerm(
+                        Kind.NOT,
+                        solver.mkTerm(
+                            Kind.AND,
+                            *conjuncts
+                        )
                     )
                 )
 
@@ -238,6 +302,8 @@ def eval_constants(c):
         return c.getRealValue()
     if c.getKind() == Kind.ADD:
         return sum(map(lambda x: eval_constants(x), c))
+    if c.getKind() == Kind.MULT:
+        return eval_constants(c[0]) * eval_constants(c[1])
     if c.getKind() == Kind.SUB:
         return eval_constants(c[0]) - eval_constants(c[1])
     if c.getKind() == Kind.DIV:

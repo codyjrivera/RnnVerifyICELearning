@@ -23,8 +23,8 @@ def marabou_solve_negate_eq(query, debug=False, print_vars=False, return_vars=Fa
     :return: True if UNSAT (no valid assignment), False otherwise
     '''
     verbose = 0
-    # if debug:
-    #     query.dump()
+    #if debug:
+    # query.dump()
 
     # print("{}: start query".format(str(datetime.now()).split(".")[0]), flush=True)
     vars1, stats1 = MarabouCore.solve(query, "", MARABOU_TIMEOUT, verbose)
@@ -174,8 +174,14 @@ def create_invariant_equations(loop_indices: List[int],
 
     induction_base_equations = [induction_step] + loop_equations + zero_rnn_hidden
 
-    induction_hypothesis = create_induction_hypothesis_from_invariant_eq() + [step_loop_eq]
-    induction_step_equations = [induction_step]
+    # The way it is now
+    induction_hypothesis = create_induction_hypothesis_from_invariant_eq()
+    induction_step_equations = [step_loop_eq] + [induction_step]
+
+    # # The way it was
+    # induction_hypothesis = create_induction_hypothesis_from_invariant_eq() + [step_loop_eq]
+    # induction_step_equations = [induction_step]
+
     # induction_step_equations = induction_step + step_loop_eq
 
     return induction_base_equations, induction_step_equations, induction_hypothesis
@@ -219,10 +225,11 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
     # first prove base case for all equations
     for i, ls_eq in enumerate(base_eq):
         for eq in ls_eq:
+            #eq.dump()
             network.addEquation(eq)
         marabou_result, sat_vars = marabou_solve_negate_eq(network, print_vars=True, return_vars=True)
         assignments.append(sat_vars)
-        # network.dump()
+        #network.dump()
 
         for eq in ls_eq:
             network.removeEquation(eq)
@@ -257,7 +264,7 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
     # add all hypothesis equations
     # print("adding hypothesis_eq")
     for eq in hypothesis_eq:
-        # eq.dump()
+        #eq.dump()
         network.addEquation(eq)
 
     hypothesis_fail = False
@@ -272,7 +279,6 @@ def prove_invariant_multi(network, rnn_start_idxs: List[int],
     if not hypothesis_fail:
         for i, steq_eq_ls in enumerate(step_eq):
             for eq in steq_eq_ls:
-                # eq.dump()
                 network.addEquation(eq)
 
             marabou_result, cur_vars = marabou_solve_negate_eq(network, print_vars=True, return_vars=True)
@@ -391,14 +397,13 @@ def property_oracle_generator(network, property_equations):
 
         # TODO: This is only for debug
         # before we prove the property, make sure the invariants does not contradict each other, expect SAT from marabou
-        # network.dump()
-        assert not marabou_solve_negate_eq(network, False, False)
+        # assert not marabou_solve_negate_eq(network, False, False)
 
         for eq in property_equations:
             if eq is not None:
                 network.addEquation(eq)
         res, sat_vars = marabou_solve_negate_eq(network, False, print_vars=True, return_vars=True)
-        # network.dump()
+        #network.dump()
         if res:
             pass
         # Get negative counterexamples
@@ -452,9 +457,25 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
         learner_res = learner.do_round(rnnModel, algorithm)
         if not learner_res:
             res = False
+            print("unrealizable")
+            for l in range(rnnModel.num_rnn_layers):
+                print("Layer", l)
+                print("pos:", algorithm.alphas_algorithm_per_layer[l].pos_cex)
+                print("neg:", algorithm.alphas_algorithm_per_layer[l].neg_cex)
+                print("imp:", algorithm.alphas_algorithm_per_layer[l].imp_cex)
             break
 
-        # # Test case
+        # Test case
+        # if i == 0:
+    
+        # else:
+        #     learner = ICELearner()
+        #     learner_res = learner.do_round(rnnModel, algorithm)
+        #     if not learner_res:
+        #         res = False
+        #         break
+
+        # # # Another invariant? (yes)
         # algorithm.alphas_algorithm_per_layer[0].ice_alphas = [0.0, 0.0, 0.0, 0.0]
         # algorithm.alphas_algorithm_per_layer[0].ice_betas = [0.0, 0.0, 0.0, 1.0]
         # algorithm.alphas_algorithm_per_layer[0].ice_is_upper = [False, False, True, True]
@@ -462,13 +483,10 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
         # algorithm.alphas_algorithm_per_layer[1].ice_betas = [0.0, 0.0, 1.0, 1.0]
         # algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
 
-        # # Another invariant? (yes)
-        # algorithm.alphas_algorithm_per_layer[0].ice_alphas = [0.0, 0.0, 0.0, 1.0]
-        # algorithm.alphas_algorithm_per_layer[0].ice_betas = [0.0, 0.0, 0.0, 1.0]
-        # algorithm.alphas_algorithm_per_layer[0].ice_is_upper = [False, False, True, True]
-        # algorithm.alphas_algorithm_per_layer[1].ice_alphas = [0.0, 0.0, 1.0, 1.1]
-        # algorithm.alphas_algorithm_per_layer[1].ice_betas = [0.0, 0.0, 1.0, 0.0]
-        # algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
+        for l in range(rnnModel.num_rnn_layers):
+            print(algorithm.alphas_algorithm_per_layer[l].ice_alphas)
+            print(algorithm.alphas_algorithm_per_layer[l].ice_betas)
+            print(algorithm.alphas_algorithm_per_layer[l].ice_is_upper)
 
         # if i > 0:
         #     exit(1)
@@ -526,29 +544,29 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
                     if hasattr(algorithm, 'proved_invariant'):
                         algorithm.proved_invariant(l, equations=equations)
                 # When we prove layer l+1 we need to proved equations on layer l
-                proved_equations += [eq for eq_ls in equations for eq in eq_ls] if isinstance(equations[0],
+                eqs = [eq for eq_ls in equations for eq in eq_ls] if isinstance(equations[0],
                                                                                               list) else equations
+                proved_equations += eqs
                 # print(proved_equations)
-                for eq in proved_equations:
+                for eq in eqs:
                     network.addEquation(eq)
             else:
                 print('layer: {}, fail in one (or more) invariants: {}'.format(l, invariant_results))
                 invariant_okay = False
-                break
-                # # Still propagate the invariant forward.
-                # if ice_test:
-                #     if hasattr(algorithm, 'proved_ice_invariant'):
-                #         algorithm.proved_ice_invariant(l, equations=equations)
-                # else:
-                #     if hasattr(algorithm, 'proved_invariant'):
-                #         algorithm.proved_invariant(l, equations=equations)
-                # # When we prove layer l+1 we need to proved equations on layer l
-                # eqs = [eq for eq_ls in equations for eq in eq_ls] if isinstance(equations[0],
-                #                                                                               list) else equations
-                # eqs = map(lambda x: x[1], filter(lambda t: layer_invariant_results[t[0]], enumerate(eqs)))
-                # proved_equations += eqs
-                # for eq in proved_equations:
-                #     network.addEquation(eq)
+                #break
+                # Still propagate the invariant forward.
+                if ice_test:
+                    if hasattr(algorithm, 'proved_ice_invariant'):
+                        algorithm.proved_ice_invariant(l, equations=equations)
+                else:
+                    if hasattr(algorithm, 'proved_invariant'):
+                        algorithm.proved_invariant(l, equations=equations)
+                # When we prove layer l+1 we need to proved equations on layer l
+                eqs = [eq for eq_ls in equations for eq in eq_ls] if isinstance(equations[0],
+                                                                                              list) else equations
+                proved_equations += eqs
+                for eq in eqs:
+                    network.addEquation(eq)
 
         if unsat:
             res = False
@@ -565,11 +583,12 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
                 last_rnn_idxs,
                 return_vars=True
             )
-            algorithm.alphas_algorithm_per_layer[l]\
-                     .neg_cex.extend(neg_cex)
+            if neg_cex != []:
+                algorithm.alphas_algorithm_per_layer[l]\
+                            .neg_cex.append(neg_cex)
             end_property = timer()
             stats['property_times'].append(end_property - start_property)
-            if prop_res:
+            if prop_res and invariant_okay:
                 print("proved property after {} iterations, using the following invariants:".format(i + 1))
                 # Test case
                 num_pos, num_neg, num_imp = 0, 0, 0
@@ -588,9 +607,9 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
                 print("failed to prove property at iteration", i + 1)
                 res = False
         else:
-            # assert False
             print('fail in one (or more) invariants:', invariant_results)
             res = False
+        
 
         #  print progress for debug
         if debug:
@@ -721,7 +740,7 @@ def adversarial_query(x: list, radius: float, y_idx_max: int, other_idx: int, h5
 
     time_eq = MarabouCore.Equation()
     time_eq.addAddend(1, rnn_model.get_start_end_idxs(0)[0][0])
-    time_eq.setScalar(n_iterations)
+    time_eq.setScalar(n_iterations - 1) #see if this is okay
     end_initialize_query = timer()
 
     start_initial_alg = timer()

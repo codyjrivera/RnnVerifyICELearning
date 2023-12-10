@@ -660,6 +660,7 @@ class ICESingleLayer:
         invariant_equation.addAddend(1, rnn_out_idx)  # b_i
         invariant_equation.addAddend(-alpha, loop_idx)  # i
         invariant_equation.setScalar(beta)
+        #invariant_equation.dump()
         return invariant_equation
 
     def get_ice_equations(self):
