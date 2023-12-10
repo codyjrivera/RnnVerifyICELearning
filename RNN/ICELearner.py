@@ -18,130 +18,84 @@ class ICELearner:
         self.solver.setOption("incremental", "false")
         self.solver.setOption("tlimit", str(TIMEOUT * 1000))
 
-    # ; (synth-fun Inv ((t Real) (m Real)) Bool
-    # ;     ((B Bool) (L Bool) (U Bool) (C Real) (Cp Real) (Cn Real))
-    # ;     ((B Bool ((and L U)))
-    # ;      (L Bool ((>= m (+ (* C t) C))))
-    # ;      (U Bool ((<= m (+ (* C t) C))))
-    # ;      (C Real (Cp Cn))
-    # ;      (Cp Real (0 (+ Cp 1) (+ Cp 0.1) (+ Cp 0.01)))
-    # ;      (Cn Real (0 (- Cn 1) (- Cn 0.1) (- Cn 0.01)))))
-    def makeGrammar(self, t, m):
+    def make_template_fun(self, c1, c2, c3, c4, t, m):
+        solver = self.solver
+
+        lb_term = solver.mkTerm(
+            Kind.GEQ,
+            m,
+            solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c1, t), c2),
+        )
+
+        ub_term = solver.mkTerm(
+            Kind.LEQ,
+            m,
+            solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c3, t), c4),
+        )
+
+        body = solver.mkTerm(Kind.AND, lb_term, ub_term)
+        boolean = solver.getBooleanSort()
+        return solver.defineFun("Inv", [c1, c2, c3, c4, t, m], boolean, body)
+
+    def make_const_grammar(self, inc):
         solver = self.solver
         real = solver.getRealSort()
-        boolean = solver.getBooleanSort()
 
         # Declare non-terminals
-        b_nt = solver.mkVar(boolean, "B")
-        l_nt = solver.mkVar(boolean, "L")
-        u_nt = solver.mkVar(boolean, "U")
         c_nt = solver.mkVar(real, "C")
         cp_nt = solver.mkVar(real, "Cp")
         cn_nt = solver.mkVar(real, "Cn")
 
         # Make grammar
-        g = solver.mkGrammar([t, m], [b_nt, l_nt, u_nt, c_nt, cp_nt, cn_nt])
-
-        # Productions for B
-        b_prod0 = solver.mkTerm(Kind.AND, l_nt, u_nt)
-        g.addRules(b_nt, [b_prod0])
-
-        # Productions for L
-        l_prod0 = solver.mkTerm(
-            Kind.GEQ,
-            m,
-            solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c_nt, t), c_nt),
-        )
-        g.addRules(l_nt, [l_prod0])
-
-        # Productions for U
-        u_prod0 = solver.mkTerm(
-            Kind.LEQ,
-            m,
-            solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c_nt, t), c_nt),
-        )
-        g.addRules(u_nt, [u_prod0])
+        g = solver.mkGrammar([], [c_nt, cp_nt, cn_nt])
 
         # Productions for C
         g.addRules(c_nt, [cp_nt, cn_nt])
 
         # Productions for Cp
-        cp_prod0 = solver.mkTerm(Kind.ADD, cp_nt, solver.mkReal(1))
-        cp_prod1 = solver.mkTerm(Kind.ADD, cp_nt, solver.mkReal(0.1))
-        cp_prod2 = solver.mkTerm(Kind.ADD, cp_nt, solver.mkReal(0.01))
-        g.addRules(cp_nt, [solver.mkReal(0), cp_prod0, cp_prod1, cp_prod2])
+        cp_prod0 = solver.mkTerm(Kind.ADD, cp_nt, inc)
+        g.addRules(cp_nt, [solver.mkReal(0), cp_prod0])
 
         # Productions for Cn
-        cn_prod0 = solver.mkTerm(Kind.SUB, cn_nt, solver.mkReal(1))
-        cn_prod1 = solver.mkTerm(Kind.SUB, cn_nt, solver.mkReal(0.1))
-        cn_prod2 = solver.mkTerm(Kind.SUB, cn_nt, solver.mkReal(0.01))
-        g.addRules(cn_nt, [solver.mkReal(0), cn_prod0, cn_prod1, cn_prod2])
+        cn_prod0 = solver.mkTerm(Kind.SUB, cn_nt, inc)
+        g.addRules(cn_nt, [solver.mkReal(0), cn_prod0])
 
         return g
-        
-    # # ; (synth-fun Inv ((t Real) (m Real)) Bool
-    # # ;     ((B Bool) (L Bool) (U Bool) (C Real) (Cp Real) (Cn Real))
-    # # ;     ((B Bool ((and L U)))
-    # # ;      (L Bool ((>= m (+ (* C t) C))))
-    # # ;      (U Bool ((<= m (+ (* C t) C))))
-    # # ;      (C Real ((- 5000) 5000 (* 0.5 (+ C C))))))
-    # def makeGrammar(self, t, m):
-    #     solver = self.solver
-    #     real = solver.getRealSort()
-    #     boolean = solver.getBooleanSort()
-
-    #     # Declare non-terminals
-    #     b_nt = solver.mkVar(boolean, "B")
-    #     l_nt = solver.mkVar(boolean, "L")
-    #     u_nt = solver.mkVar(boolean, "U")
-    #     c_nt = solver.mkVar(real, "C")
-
-    #     # Make grammar
-    #     g = solver.mkGrammar([t, m], [b_nt, l_nt, u_nt, c_nt])
-
-    #     # Productions for B
-    #     b_prod0 = solver.mkTerm(Kind.AND, l_nt, u_nt)
-    #     g.addRules(b_nt, [b_prod0])
-
-    #     # Productions for L
-    #     l_prod0 = solver.mkTerm(
-    #         Kind.GEQ,
-    #         m,
-    #         solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c_nt, t), c_nt),
-    #     )
-    #     g.addRules(l_nt, [l_prod0])
-
-    #     # Productions for U
-    #     u_prod0 = solver.mkTerm(
-    #         Kind.LEQ,
-    #         m,
-    #         solver.mkTerm(Kind.ADD, solver.mkTerm(Kind.MULT, c_nt, t), c_nt),
-    #     )
-    #     g.addRules(u_nt, [u_prod0])
-
-    #     # Productions for C
-    #     lb = solver.mkReal(-5000)
-    #     ub = solver.mkReal(5000)
-    #     midpoint = solver.mkTerm(
-    #         Kind.MULT,
-    #         solver.mkReal(0.5),
-    #         solver.mkTerm(
-    #             Kind.ADD,
-    #             c_nt,
-    #             c_nt
-    #         )
-    #     )
-    #     g.addRules(c_nt, [lb, ub, midpoint])
-
-    #     return g
 
     def do_round(self, rnnModel: RnnMarabouModel, algorithm: ICEMultiLayer, bk=False):
         solver = self.solver
         real = solver.getRealSort()
         boolean = solver.getBooleanSort()
+        c1 = solver.mkVar(real, "C1")
+        c2 = solver.mkVar(real, "C2")
+        c3 = solver.mkVar(real, "C3")
+        c4 = solver.mkVar(real, "C4")
         self.t = solver.mkVar(real, "t")
         self.m = solver.mkVar(real, "m")
-        g = self.makeGrammar(self.t, self.m)
+
+        increments = [
+            solver.mkReal(0),
+            solver.mkTerm(Kind.DIVISION, solver.mkReal(1), solver.mkReal(10)),
+            solver.mkTerm(Kind.DIVISION, solver.mkReal(1), solver.mkReal(100))
+        ]
+
+        lower_limits = [
+            solver.mkReal(-500),
+            solver.mkTerm(Kind.DIVISION, solver.mkReal(-9), solver.mkReal(10)),
+            solver.mkTerm(Kind.DIVISION, solver.mkReal(-9), solver.mkReal(100))
+        ]
+
+        upper_limits = [
+            solver.mkReal(500),
+            solver.mkTerm(Kind.DIVISION, solver.mkReal(9), solver.mkReal(10)),
+            solver.mkTerm(Kind.DIVISION, solver.mkReal(9), solver.mkReal(100))
+        ]
+
+        const_grammars = []
+        for inc in increments:
+            const_grammars.append(self.make_const_grammar(inc))
+
+        inv_template = self.make_template_fun(c1, c2, c3, c4, self.t, self.m)
 
         invariants = []
         for l in range(rnnModel.num_rnn_layers):
@@ -150,8 +104,48 @@ class ICELearner:
 
             # Declare invariants to synthesize
             for i in range(len(rnn_start_idxs)):
+                al = []
+                for j, g in enumerate(const_grammars):
+                    al.append(
+                        solver.synthFun(
+                            "al_" + str(l) + "_" + str(i) + "_" + str(j), 
+                            [], 
+                            real, 
+                            g
+                        )
+                    )
+                bl = []
+                for j, g in enumerate(const_grammars):
+                    bl.append(
+                        solver.synthFun(
+                            "bl_" + str(l) + "_" + str(i) + "_" + str(j), 
+                            [], 
+                            real, 
+                            g
+                        )
+                    )
+                ah = []
+                for j, g in enumerate(const_grammars):
+                    ah.append(
+                        solver.synthFun(
+                            "ah_" + str(l) + "_" + str(i) + "_" + str(j), 
+                            [], 
+                            real, 
+                            g
+                        )
+                    )
+                bh = []
+                for j, g in enumerate(const_grammars):
+                    bh.append(
+                        solver.synthFun(
+                            "bh_" + str(l) + "_" + str(i) + "_" + str(j), 
+                            [], 
+                            real, 
+                            g
+                        )
+                    )
                 invariants_inner.append(
-                    solver.synthFun("Inv_" + str(l) + "_" + str(i), [self.t, self.m], boolean, g)
+                    [al, bl, ah, bh]
                 )
 
             # Add positive counterexamples
@@ -160,7 +154,11 @@ class ICELearner:
                 solver.addSygusConstraint(
                     solver.mkTerm(
                         Kind.APPLY_UF,
-                        invariants_inner[i],
+                        inv_template,
+                        solver.mkTerm(Kind.ADD, *(invariants_inner[i][0])),
+                        solver.mkTerm(Kind.ADD, *(invariants_inner[i][1])),
+                        solver.mkTerm(Kind.ADD, *(invariants_inner[i][2])),
+                        solver.mkTerm(Kind.ADD, *(invariants_inner[i][3])),
                         solver.mkReal(t),
                         solver.mkReal(Fraction(str(p))),
                     )
@@ -173,13 +171,21 @@ class ICELearner:
                         Kind.IMPLIES,
                         solver.mkTerm(
                             Kind.APPLY_UF,
-                            invariants_inner[i],
+                            inv_template,
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][0])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][1])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][2])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][3])),
                             solver.mkTerm(Kind.SUB, solver.mkReal(t), solver.mkReal(1)),
                             solver.mkReal(Fraction(str(r))),
                         ),
                         solver.mkTerm(
                             Kind.APPLY_UF,
-                            invariants_inner[i],
+                            inv_template,
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][0])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][1])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][2])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][3])),
                             solver.mkReal(t),
                             solver.mkReal(Fraction(str(s))),
                         )
@@ -196,7 +202,11 @@ class ICELearner:
                     conjuncts.append(
                         solver.mkTerm(
                             Kind.APPLY_UF,
-                            invariants_inner[i],
+                            inv_template,
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][0])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][1])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][2])),
+                            solver.mkTerm(Kind.ADD, *(invariants_inner[i][3])),
                             solver.mkReal(t),
                             solver.mkReal(Fraction(str(n))),
                         )
@@ -221,13 +231,20 @@ class ICELearner:
                 alpha_u = []
                 beta_u = []
 
-                sols = solver.getSynthSolutions(invariants[l])
-                for sol in sols:
-                    (a_l, b_l), (a_u, b_u) = extract_constants(sol)
-                    alpha_l.append(a_l)
-                    beta_l.append(b_l)
-                    alpha_u.append(a_u)
-                    beta_u.append(b_u)
+                for inner_invariant in invariants[l]:
+                    sols = solver.getSynthSolutions(inner_invariant[0])
+                    a_l = sum(map(eval_constants, sols))
+                    sols = solver.getSynthSolutions(inner_invariant[1])
+                    b_l = sum(map(eval_constants, sols))
+                    sols = solver.getSynthSolutions(inner_invariant[2])
+                    a_u = sum(map(eval_constants, sols))
+                    sols = solver.getSynthSolutions(inner_invariant[3])
+                    b_u = sum(map(eval_constants, sols))
+
+                    alpha_l.append(float(a_l))
+                    beta_l.append(float(b_l))
+                    alpha_u.append(float(a_u))
+                    beta_u.append(float(b_u))
 
                 algorithm.alphas_algorithm_per_layer[l].ice_alphas = alpha_l + alpha_u
                 algorithm.alphas_algorithm_per_layer[l].ice_betas = beta_l + beta_u
@@ -306,7 +323,7 @@ def eval_constants(c):
         return eval_constants(c[0]) * eval_constants(c[1])
     if c.getKind() == Kind.SUB:
         return eval_constants(c[0]) - eval_constants(c[1])
-    if c.getKind() == Kind.DIV:
+    if c.getKind() == Kind.DIVISION:
         return eval_constants(c[0]) / eval_constants(c[1])
     print("Weird expression encountered: ", c, file=sys.stderr)
     exit(0)
