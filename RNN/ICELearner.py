@@ -114,6 +114,13 @@ class ICELearner:
                             g
                         )
                     )
+                    solver.addSygusConstraint(
+                        solver.mkTerm(
+                            Kind.AND, 
+                            solver.mkTerm(Kind.LEQ, lower_limits[j], al[-1]),
+                            solver.mkTerm(Kind.LEQ, al[-1], upper_limits[j]),
+                        )
+                    )
                 bl = []
                 for j, g in enumerate(const_grammars):
                     bl.append(
@@ -122,6 +129,13 @@ class ICELearner:
                             [], 
                             real, 
                             g
+                        )
+                    )
+                    solver.addSygusConstraint(
+                        solver.mkTerm(
+                            Kind.AND, 
+                            solver.mkTerm(Kind.LEQ, lower_limits[j], bl[-1]),
+                            solver.mkTerm(Kind.LEQ, bl[-1], upper_limits[j]),
                         )
                     )
                 ah = []
@@ -134,6 +148,13 @@ class ICELearner:
                             g
                         )
                     )
+                    solver.addSygusConstraint(
+                        solver.mkTerm(
+                            Kind.AND, 
+                            solver.mkTerm(Kind.LEQ, lower_limits[j], ah[-1]),
+                            solver.mkTerm(Kind.LEQ, ah[-1], upper_limits[j]),
+                        )
+                    )
                 bh = []
                 for j, g in enumerate(const_grammars):
                     bh.append(
@@ -142,6 +163,13 @@ class ICELearner:
                             [], 
                             real, 
                             g
+                        )
+                    )
+                    solver.addSygusConstraint(
+                        solver.mkTerm(
+                            Kind.AND, 
+                            solver.mkTerm(Kind.LEQ, lower_limits[j], bh[-1]),
+                            solver.mkTerm(Kind.LEQ, bh[-1], upper_limits[j]),
                         )
                     )
                 invariants_inner.append(

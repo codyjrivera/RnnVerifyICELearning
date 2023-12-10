@@ -483,10 +483,10 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
         # algorithm.alphas_algorithm_per_layer[1].ice_betas = [0.0, 0.0, 1.0, 1.0]
         # algorithm.alphas_algorithm_per_layer[1].ice_is_upper = [False, False, True, True]
 
-        for l in range(rnnModel.num_rnn_layers):
-            print(algorithm.alphas_algorithm_per_layer[l].ice_alphas)
-            print(algorithm.alphas_algorithm_per_layer[l].ice_betas)
-            print(algorithm.alphas_algorithm_per_layer[l].ice_is_upper)
+        # for l in range(rnnModel.num_rnn_layers):
+        #     print(algorithm.alphas_algorithm_per_layer[l].ice_alphas)
+        #     print(algorithm.alphas_algorithm_per_layer[l].ice_betas)
+        #     print(algorithm.alphas_algorithm_per_layer[l].ice_is_upper)
 
         # if i > 0:
         #     exit(1)
