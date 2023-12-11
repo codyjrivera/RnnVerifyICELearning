@@ -74,7 +74,7 @@ class ICELearner:
         self.m = solver.mkVar(real, "m")
 
         increments = [
-            solver.mkReal(0),
+            solver.mkReal(1),
             solver.mkTerm(Kind.DIVISION, solver.mkReal(1), solver.mkReal(10)),
             solver.mkTerm(Kind.DIVISION, solver.mkReal(1), solver.mkReal(100))
         ]

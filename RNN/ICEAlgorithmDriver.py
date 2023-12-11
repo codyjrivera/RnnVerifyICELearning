@@ -578,6 +578,8 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
             # print('proved an invariant: {}'.format(algorithm.get_alphas()))
             start_property = timer()
             last_rnn_idxs, _ = rnnModel.get_start_end_idxs(rnn_layer=rnnModel.num_rnn_layers - 1)
+            for eq in proved_equations:
+                eq.dump()
             prop_res, sat_vars, neg_cex = property_oracle(
                 proved_equations, 
                 last_rnn_idxs,
@@ -740,7 +742,7 @@ def adversarial_query(x: list, radius: float, y_idx_max: int, other_idx: int, h5
 
     time_eq = MarabouCore.Equation()
     time_eq.addAddend(1, rnn_model.get_start_end_idxs(0)[0][0])
-    time_eq.setScalar(n_iterations - 1) #see if this is okay
+    time_eq.setScalar(n_iterations) #see if this is okay
     end_initialize_query = timer()
 
     start_initial_alg = timer()

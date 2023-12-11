@@ -67,7 +67,7 @@ def test_multilayer_large_n():
 def test_specific_multilayer():
     point = points[3]
     net_path = multi_layer_paths[0]
-    n = 2
+    n = 4
 
     print(point)
     print(net_path)

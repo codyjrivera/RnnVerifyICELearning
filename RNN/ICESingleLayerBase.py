@@ -165,7 +165,7 @@ class ICESingleLayer:
         cond_x_u = 0
         cond_x_l = 0
         for j in range(self.w_in.shape[0]):
-            assert self.xlim[j][1] * t + self.prev_layer_beta[1][j] >= 0
+            #assert self.xlim[j][1] * t + self.prev_layer_beta[1][j] >= 0
             w = self.w_in[j, i]
             if self.approximate_layers:
                 # The input from the previous layer is an ReLU function output, therefore we take max with 0

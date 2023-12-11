@@ -16,3 +16,4 @@ tqdm
 PTable
 tensorflow
 gurobipy
+cvc5

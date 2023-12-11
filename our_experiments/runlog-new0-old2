@@ -1,0 +1,854 @@
+2023-12-10 16:57:13.964594: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2023-12-10 16:57:13.966211: I external/local_tsl/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2023-12-10 16:57:13.994757: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2023-12-10 16:57:13.994786: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2023-12-10 16:57:13.995780: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2023-12-10 16:57:14.001311: I external/local_tsl/tsl/cuda/cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+2023-12-10 16:57:14.001507: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-12-10 16:57:14.573608: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-7.4.3, pluggy-1.3.0
+rootdir: /home/cody/courses/cs521/project/RnnVerifyICELearning2
+plugins: forked-1.6.0, rerunfailures-13.0, repeat-0.9.3, timeout-2.2.0, sugar-0.9.7, xdist-3.5.0
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2448056
+Academic license 2448056 - for non-commercial use only - registered to co___@illinois.edu
+Set parameter Threads to value 1
+Set parameter NodefileStart to value 0.5
+collected 15 items
+
+Eval_CS521TableNew0.py Evaluating ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 10
+[ 1.38904494 -1.27707118  2.68229229 -0.71176371  1.85691719 -2.09908532
+  2.68862056  5.74339738 -5.17481691  3.18667748  0.05770153 -2.37463105
+ -5.12724034  2.39589748  2.37167834  4.96877781 -6.60411082 -1.24277471
+  1.08938422  0.88018166  4.46071361 -0.91915027  1.08063871  5.10607453
+ -1.70147407 -2.34894743  1.72610799 -1.9725598  -2.55600173  0.5771378
+  0.37973627 -3.07179272 -0.52788191  0.96659087 -6.03581164 -1.78420966
+  6.46870351  0.10727791  2.44531055  1.3949839 ]
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 150ms/step
+Time taken in Sygus 0.06280500499997288
+SAT
+induction base fail, on invariant 3
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 0.1771571489953203
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+induction base fail, on invariant 2
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, True, False, True]
+fail in one (or more) invariants: [True, True, True, False, True, True, False, True]
+Time taken in Sygus 0.34191545999783557
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, True, False, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, False, False]
+Time taken in Sygus 1.4852387079881737
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+Time taken in Sygus 1.3732870959938737
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+Time taken in Sygus 1.1123236759885913
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+Time taken in Sygus 1.511563626001589
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+Time taken in Sygus 0.7351317100110464
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, False, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, False, True, False]
+Time taken in Sygus 1.6681479669932742
+SAT
+induction base fail, on invariant 0
+layer: 0, fail in one (or more) invariants: [False, True, True, True]
+fail in one (or more) invariants: [False, True, True, True, True, True, True, True]
+Time taken in Sygus 1.7020625559962355
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, False]
+fail in one (or more) invariants: [True, False, True, False, True, True, True, True]
+Time taken in Sygus 2.3228146030014614
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 1.319847334001679
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 1.589905278000515
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+Time taken in Sygus 1.0407999840099365
+SAT
+failed to prove property at iteration 14
+Time taken in Sygus 3.050576527006342
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, False, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, False, True, False, True, False, True]
+Time taken in Sygus 2.3315615379979135
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+SAT
+layer: 1, fail in one (or more) invariants: [True, False, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, False, True, True, False, True, True, True]
+Time taken in Sygus 1.5993079109903192
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+Time taken in Sygus 2.5026811549905688
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 2.1139543339959346
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+fail in one (or more) invariants: [True, True, False, True, True, True, True, True]
+Time taken in Sygus 2.6790022079949267
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+Time taken in Sygus 2.151092322994373
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 2.391536184994038
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 4.084874318010407
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+Time taken in Sygus 4.217021918011596
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+Time taken in Sygus 2.265767357996083
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 3.0030879939877195
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+SAT
+induction base fail, on invariant 0
+layer: 1, fail in one (or more) invariants: [True, False, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, False, True, True, False, True, True, True]
+Time taken in Sygus 4.913696524992702
+SAT
+induction base fail, on invariant 0
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 4.292842095994274
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 3.488431022997247
+proved property after 29 iterations, using the following invariants:
+[0.0, 0.0, 0.0, 1.0]
+[0.0, 0.0, 0.0, 1.0]
+[False, False, True, True]
+[0.19, 0.0, 1.0, 0.9]
+[0.0, 0.0, 0.91, 1.1]
+[False, False, True, True]
+and 42 counterexamples: (6 +) (1 -) (35 * => *)
+On ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 10
+The final result was:  True taking 97.03012709500035 s
+.Evaluating ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 11
+[ 4.62178131 -2.49315716  3.44262399  3.79895034 -6.20484764  0.6489588
+  0.60719089 -0.82919495  1.80375117 -2.04915486 -5.69601623  6.52284619
+  4.77125768  1.81683863  3.49648716 -0.68555435  0.59908502 -3.10957578
+ -1.42141699 -2.89691729  2.38224936  1.75092803  5.06134658  2.17536069
+ -2.93234783  0.34515043  2.17892129 -1.42762975  0.96808545 -4.26230714
+  0.3115913  -2.2186352   2.88905394  2.55296626  4.0884213  -7.40175043
+ -1.08222058 -1.75488204  2.04611373  3.02215826]
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 170ms/step
+Time taken in Sygus 0.07192698800645303
+SAT
+induction base fail, on invariant 2
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+Time taken in Sygus 0.2527213469875278
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+Time taken in Sygus 0.48034691301290877
+SAT
+induction base fail, on invariant 0
+SAT
+induction base fail, on invariant 3
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+fail in one (or more) invariants: [False, True, True, False, True, True, True, True]
+Time taken in Sygus 1.14533111199853
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, False, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, False, True, True, True, True, True, False]
+Time taken in Sygus 0.6758085210021818
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 0.8246072299953084
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 0.7888293769938173
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+Time taken in Sygus 1.2152793540008133
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+fail in one (or more) invariants: [True, False, True, True, True, True, True, True]
+Time taken in Sygus 0.9158714549994329
+proved property after 9 iterations, using the following invariants:
+[0.0, 0.1, 0.0, 0.0]
+[0.0, -0.89, 0.0, 0.1]
+[False, False, True, True]
+[0.9, -1.0, 0.89, -0.01]
+[-1.0, 0.0, 1.0, 1.0]
+[False, False, True, True]
+and 13 counterexamples: (4 +) (0 -) (9 * => *)
+On ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 11
+The final result was:  True taking 13.258233540997026 s
+.Evaluating ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 12
+[-2.90888776 -3.84714433 -4.04067468  0.73370439  7.14281117 -0.58536916
+ -0.6612866   0.39263706  5.09177582 -3.70631097 -1.92007402  1.45744339
+ -2.28084786 -4.49600945  1.7241299   0.43112272 -2.04265236  1.17023656
+  3.73538372  1.10173039  1.62638412 -0.41918398 -4.28480783  0.35050885
+ -1.82711462 -1.53268714 -2.51172904 -2.69051403  0.66240702 -0.3466622
+  1.5108904   0.60861423 -5.90926464  4.21363051 -0.24760015  0.9916754
+ -0.0950116   5.250326   -1.2700644  -5.57441772]
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 161ms/step
+Time taken in Sygus 0.13294110099377576
+SAT
+induction base fail, on invariant 2
+SAT
+induction base fail, on invariant 3
+layer: 0, fail in one (or more) invariants: [True, True, False, False]
+fail in one (or more) invariants: [True, True, False, False, True, True, True, True]
+Time taken in Sygus 0.8685414159990614
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, False]
+SAT
+induction base fail, on invariant 2
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, True, False, False, True, True, False, False]
+fail in one (or more) invariants: [True, True, False, False, True, True, False, False]
+Time taken in Sygus 1.5676298739999766
+SAT
+induction base fail, on invariant 2
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, True, False, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, False, True, True, True, True, False]
+Time taken in Sygus 3.643363025999861
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [False, True, True, False, True, True, True, False]
+fail in one (or more) invariants: [False, True, True, False, True, True, True, False]
+Time taken in Sygus 2.7239095749973785
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, False]
+Time taken in Sygus 3.5434633499971824
+SAT
+induction base fail, on invariant 2
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+Time taken in Sygus 1.6469757680024486
+SAT
+induction base fail, on invariant 2
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+fail in one (or more) invariants: [True, True, False, True, True, True, True, True]
+Time taken in Sygus 3.182207871999708
+SAT
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, False, False]
+SAT
+induction base fail, on invariant 0
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [False, True, False, False, False, True, True, False]
+fail in one (or more) invariants: [False, True, False, False, False, True, True, False]
+Time taken in Sygus 2.854471927988925
+SAT
+induction base fail, on invariant 3
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 5.749104707996594
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+fail in one (or more) invariants: [False, True, True, False, True, True, True, True]
+Time taken in Sygus 5.367848410009174
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, False, True, True, True, False, False]
+fail in one (or more) invariants: [True, True, False, True, True, True, False, False]
+Time taken in Sygus 3.4076255789987044
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, False, True, False, True, False, False]
+fail in one (or more) invariants: [True, True, False, True, False, True, False, False]
+Time taken in Sygus 7.0987756550021
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, False, True]
+Time taken in Sygus 9.374690883996664
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, True]
+SAT
+induction base fail, on invariant 1
+layer: 1, fail in one (or more) invariants: [False, True, True, True, True, False, True, True]
+fail in one (or more) invariants: [False, True, True, True, True, False, True, True]
+Time taken in Sygus 7.372650586999953
+SAT
+induction base fail, on invariant 0
+layer: 0, fail in one (or more) invariants: [False, True, True, True]
+fail in one (or more) invariants: [False, True, True, True, True, True, True, True]
+Time taken in Sygus 5.586221656994894
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+fail in one (or more) invariants: [False, True, True, False, True, True, True, True]
+Time taken in Sygus 6.563330933000543
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, False, True]
+SAT
+layer: 1, fail in one (or more) invariants: [False, True, False, True, True, True, False, True]
+fail in one (or more) invariants: [False, True, False, True, True, True, False, True]
+Time taken in Sygus 6.366343899004278
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, True]
+SAT
+layer: 1, fail in one (or more) invariants: [False, True, True, True, True, True, False, True]
+fail in one (or more) invariants: [False, True, True, True, True, True, False, True]
+Time taken in Sygus 9.609169019007822
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, False, True]
+SAT
+layer: 1, fail in one (or more) invariants: [False, True, False, True, True, True, False, True]
+fail in one (or more) invariants: [False, True, False, True, True, True, False, True]
+Time taken in Sygus 7.565858013011166
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [False, True, True, False, True, True, False, True]
+fail in one (or more) invariants: [False, True, True, False, True, True, False, True]
+Time taken in Sygus 5.550422189000528
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, False, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, False, True, False]
+Time taken in Sygus 5.74521854800696
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 6.1594456790044205
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [False, True, True, False, True, True, False, True]
+fail in one (or more) invariants: [False, True, True, False, True, True, False, True]
+Time taken in Sygus 10.218089610993047
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+Time taken in Sygus 11.604987156999414
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, False, True]
+fail in one (or more) invariants: [False, True, False, True, True, True, True, True]
+Time taken in Sygus 7.3865332000132184
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, False, True]
+fail in one (or more) invariants: [False, True, False, True, True, True, True, True]
+Time taken in Sygus 7.258693340001628
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, False, False, True]
+fail in one (or more) invariants: [True, True, True, False, True, False, False, True]
+Time taken in Sygus 10.497247195991804
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+Time taken in Sygus 11.17951170199376
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+fail in one (or more) invariants: [True, True, False, True, True, True, True, True]
+Time taken in Sygus 5.043250761998934
+SAT
+
++++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++
+
+~~~~~~~~~~~~~~~ Stack of Thread-1 (run_server) (140235447989824) ~~~~~~~~~~~~~~~
+  File "/usr/lib/python3.10/threading.py", line 973, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/cody/courses/cs521/project/RnnVerify/.venv/lib/python3.10/site-packages/pytest_rerunfailures.py", line 439, in run_server
+    conn, _ = self.sock.accept()
+  File "/usr/lib/python3.10/socket.py", line 293, in accept
+    fd, addr = self._accept()
+
++++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+Time taken in Sygus 15.479965179009014
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, False, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, False, True, False]
+Time taken in Sygus 10.463111079006921
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+Time taken in Sygus 10.226670877003926
+On ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 12
+The final result was a timeout or other error, taking 336.5465454840014 s
+.Evaluating ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 13
+[ 2.40519878 -1.31049935  3.28560261  0.20705908 -0.76725556 -3.34674062
+  1.48440192 -6.36000248  0.63872161 -0.32094949 -3.59105236 -0.75524339
+ -0.39222695 -2.51051452 -1.69492952  1.35272241 -6.71024177 -4.04590588
+ -0.33326633 -3.93818726  4.70260496  1.58803457 -3.13680588 -3.32992568
+  2.96045574 -2.13876663 -3.61378472 -3.68854426 -0.85231508 -5.00342352
+ -2.14050713 -0.15359056  1.76571594  0.45468316  2.13200946 -0.18602605
+ -5.89517684 -2.69365934  1.57033576 -2.83617132]
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 170ms/step
+Time taken in Sygus 0.09398936599609442
+SAT
+induction base fail, on invariant 2
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+induction base fail, on invariant 2
+layer: 1, fail in one (or more) invariants: [True, True, False, True, True, True, False, True]
+fail in one (or more) invariants: [True, True, False, True, True, True, False, True]
+Time taken in Sygus 0.439581457991153
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+Time taken in Sygus 0.48695439599396195
+SAT
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, False, True, False]
+fail in one (or more) invariants: [False, False, True, False, True, True, True, True]
+Time taken in Sygus 0.5398349640017841
+SAT
+induction base fail, on invariant 1
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+SAT
+layer: 1, fail in one (or more) invariants: [True, False, True, True, True, True, False, True]
+fail in one (or more) invariants: [True, False, True, True, True, True, False, True]
+Time taken in Sygus 1.3668312399968272
+SAT
+induction base fail, on invariant 2
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, True, False, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, False, True, True, True, True, False]
+Time taken in Sygus 1.1336610360012855
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, False, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, False, True, False, True, True, True]
+Time taken in Sygus 1.0209557419875637
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 1.321500316989841
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [False, True, True, False, False, True, True, True]
+fail in one (or more) invariants: [False, True, True, False, False, True, True, True]
+Time taken in Sygus 1.3155215189908631
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 1.6973619299969869
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, False, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, False, True, True, True, True, False]
+Time taken in Sygus 1.8021101899939822
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, False]
+Time taken in Sygus 3.332208414998604
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 2.7677986869966844
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, False]
+Time taken in Sygus 2.011706730001606
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 2.4773750489985105
+SAT
+failed to prove property at iteration 15
+Time taken in Sygus 1.8144888660026481
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, False, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, False, True, False]
+Time taken in Sygus 3.1564708600053564
+SAT
+SAT
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+fail in one (or more) invariants: [False, True, True, False, True, True, True, True]
+Time taken in Sygus 2.840394789003767
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 4.622509045002516
+SAT
+failed to prove property at iteration 19
+Time taken in Sygus 4.4308044069912285
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, False, True, True]
+fail in one (or more) invariants: [True, True, True, False, True, False, True, True]
+Time taken in Sygus 4.896308131006663
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, False, True, True]
+fail in one (or more) invariants: [True, True, True, False, True, False, True, True]
+Time taken in Sygus 3.9240440540015697
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 4.910002980002901
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, True, False, True, True]
+fail in one (or more) invariants: [True, True, True, False, True, False, True, True]
+Time taken in Sygus 2.1704169349977747
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 5.471671038001659
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+Time taken in Sygus 3.2455189090105705
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 5.058589352003764
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, False, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, False, True, False, True, True, True]
+Time taken in Sygus 4.052296448004199
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+fail in one (or more) invariants: [True, True, True, True, True, False, True, True]
+Time taken in Sygus 5.933272451991797
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+Time taken in Sygus 4.623028763002367
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, False, True, True, False, True, True, False]
+fail in one (or more) invariants: [True, False, True, True, False, True, True, False]
+Time taken in Sygus 5.391290647996357
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 4.701428868997027
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 2.7348825779918116
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, True, True]
+Time taken in Sygus 5.518769847985823
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+Time taken in Sygus 6.469085826000082
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 9.281890988000669
+SAT
+induction base fail, on invariant 0
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 6.203797028996632
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 9.148967567001819
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 9.73534446398844
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, False, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, False, False, True, False, True]
+Time taken in Sygus 6.280442610994214
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, False, True]
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, False, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, False, True, False, True, True, True]
+Time taken in Sygus 6.627370624002651
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 6.245843732001958
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 9.111426899995422
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, True]
+Time taken in Sygus 9.162280003991327
+SAT
+layer: 0, fail in one (or more) invariants: [True, True, True, False]
+fail in one (or more) invariants: [True, True, True, False, True, True, True, True]
+Time taken in Sygus 6.604623191000428
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, False, True, True, False]
+Time taken in Sygus 9.771946074004518
+proved property after 46 iterations, using the following invariants:
+[0.0, 0.0, 1.11, 1.0]
+[0.0, -0.01, 1.09, 0.0]
+[False, False, True, True]
+[0.08, -0.19, 1.22, 0.92]
+[0.22, 0.0, 1.2, 0.09]
+[False, False, True, True]
+and 73 counterexamples: (6 +) (2 -) (65 * => *)
+On ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 13
+The final result was:  True taking 263.6679565520026 s
+.Evaluating ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 14
+[-3.75994996 -1.77550507  3.0052646  -2.93322264 -3.07706    -1.21576536
+ -0.37920231  7.68436551 -2.44936702 -2.83140579  2.85989665  1.43017763
+  4.53036266  5.9798165  -1.03685608 -3.61576373 -2.50145064 -5.0902019
+ -7.06416953  2.9285544   1.20575842  2.02731224 -0.84661736  1.31736639
+ -0.18973517 -5.97652386  1.94482641  3.05975914 -0.69281283  3.53035269
+  3.36930452  1.32813626 -2.60857702  0.31645846  0.15769571  2.85973945
+ -2.91143812  2.31767109  0.40423909 -2.6998353 ]
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 175ms/step
+Time taken in Sygus 0.12689661799231544
+SAT
+induction base fail, on invariant 2
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+Time taken in Sygus 0.2553964599937899
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+Time taken in Sygus 0.5959465399937471
+SAT
+induction base fail, on invariant 0
+SAT
+induction base fail, on invariant 3
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+fail in one (or more) invariants: [False, True, True, False, True, True, True, True]
+Time taken in Sygus 1.4326145740051288
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, False, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, False, True, True, True, True, True, False]
+Time taken in Sygus 0.8644921269878978
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 1.148402367005474
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 0.9975919100106694
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+Time taken in Sygus 1.4935353420005413
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+fail in one (or more) invariants: [True, False, True, True, True, True, True, True]
+Time taken in Sygus 1.056372321996605
+proved property after 9 iterations, using the following invariants:
+[0.0, 0.1, 0.0, 0.0]
+[0.0, -0.89, 0.0, 0.1]
+[False, False, True, True]
+[0.9, -1.0, 0.89, -0.01]
+[-1.0, 0.0, 1.0, 1.0]
+[False, False, True, True]
+and 13 counterexamples: (4 +) (0 -) (9 * => *)
+On ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 14
+The final result was:  True taking 16.32461615599459 s
+.Evaluating ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 15
+[ 1.43875712  3.38297957 -2.78265206  0.90508964  0.26776386 -5.37780105
+ -0.25652382  2.55452478  4.5490899   1.05456999 -3.19933892 -0.85942418
+  1.5207589  -3.52258384  0.68014779 -1.18837134  2.20304438 -4.36498399
+  1.56560011  3.11926337 -1.82295317 -1.91959985 -2.21337714  2.56859469
+ -0.78280634  3.63007324  2.17840865 -0.48033558 -2.55559204  6.92645469
+ -0.16181198 -1.50443228 -2.5045537  -1.61496451 -0.09516776 -3.82101168
+  3.31948272 -0.55762288 -5.29655605  4.59762271]
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 191ms/step
+Time taken in Sygus 0.12145828999928199
+SAT
+induction base fail, on invariant 2
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, True]
+Time taken in Sygus 0.2601740819955012
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, False, False]
+Time taken in Sygus 0.5829426370037254
+SAT
+induction base fail, on invariant 0
+SAT
+induction base fail, on invariant 3
+layer: 0, fail in one (or more) invariants: [False, True, True, False]
+fail in one (or more) invariants: [False, True, True, False, True, True, True, True]
+Time taken in Sygus 1.0227384519967018
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+SAT
+induction base fail, on invariant 3
+layer: 1, fail in one (or more) invariants: [True, False, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, False, True, True, True, True, True, False]
+Time taken in Sygus 0.7854409770079656
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 0.8673679260100471
+SAT
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+fail in one (or more) invariants: [True, True, True, True, False, True, False, True]
+Time taken in Sygus 0.7892811880010413
+SAT
+layer: 1, fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+fail in one (or more) invariants: [True, True, True, True, True, True, True, False]
+Time taken in Sygus 1.281088448013179
+SAT
+layer: 0, fail in one (or more) invariants: [True, False, True, True]
+fail in one (or more) invariants: [True, False, True, True, True, True, True, True]
+Time taken in Sygus 1.1734961759939324
+proved property after 9 iterations, using the following invariants:
+[0.0, 0.1, 0.0, 0.0]
+[0.0, -0.89, 0.0, 0.1]
+[False, False, True, True]
+[0.9, -1.0, 0.89, -0.01]
+[-1.0, 0.0, 1.0, 1.0]
+[False, False, True, True]
+and 13 counterexamples: (4 +) (0 -) (9 * => *)
+On ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 15
+The final result was:  True taking 13.732478174002608 s
+.Evaluating ./models/model_20classes_rnn2_rnn2_fc32_fc32_fc32_fc32_fc32.h5 with time = 2 on input 16
+[ 3.6318112  -0.39051514 -0.29194583  1.76414735 -1.5702211  -6.68520801
+  1.5229825  -0.46740183 -1.57334911 -2.32271778 -2.64585396  1.26795016
+  1.06306116 -2.25703466 -0.98657189 -3.32527159 -7.1508776  -1.41768604
+  1.47684444 -0.07963331 -3.87530243 -1.25163476 -3.61564787  0.89020885
+  3.57141025 -1.53334681  1.14042228  1.87765592  4.60512326  4.84917825
+ -0.29358511 -1.96294287  2.09384208  1.02256275  4.64099262  1.18211468
+  5.66560529  1.54813217  0.7704757  -2.99442747]
+1/1 [==============================] - ETA: 0s1/1 [==============================] - 0s 201ms/step

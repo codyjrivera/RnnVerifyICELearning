@@ -465,6 +465,8 @@ def prove_multidim_property(rnnModel: RnnMarabouModel, property_equations, algor
                 break
             else:
                 start_step = timer()
+                res = False # In this case, the invariants which we got were already the best, according to Gurobi
+                break
                 # If the property failed no need to pass which invariants passed (of course)
                 if hasattr(algorithm, 'return_vars') and algorithm.return_vars:
                     algorithm.do_step(True, None, sat_vars, layer_idx=i)

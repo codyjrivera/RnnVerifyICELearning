@@ -8,6 +8,14 @@ massively since 2020.
 You also need to do `pip install --upgrade pip` (and for sake of reproducibility, I also
 do `pip install wheel`).
 
+There was a bug in the old implementation where, to prove the robustness property,
+the tool would assert that `t == T_max`, while `t` is constrained elsewhere to be
+`[0, T_max - 1]`. This bug was fixed, but a full evaluation still needs to be done.
+
+To run the experiments shown in the report, run the following commands:
+`PYTHONPATH=. pytest Eval_CS521Table.py` for the old, but fixed, times
+`PYTHONPATH=. pytest Eval_CS521TableNew.py` for the new times
+
 *** RnnVerify - June 2020 ***
 
 This repository contains the proof-of-concept implementation of the
