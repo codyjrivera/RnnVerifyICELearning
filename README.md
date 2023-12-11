@@ -1,4 +1,5 @@
 ## Extensions by Cody Rivera and Hrishikesh Balakrisnan, 2023
+## for CS 521 Course Project
 
 We intend to implement ICE learning for invariant synthesis to prove
 these networks correct. We build on top of RnnVerify. I add Gurobi
@@ -103,5 +104,3 @@ demonstare the method on more (random) networks.
 To run all tests use:
     PYTHONPATH=. pytest RNN/*
 
-
-4:53.74 Jacoby
